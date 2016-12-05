@@ -1,4 +1,10 @@
-
+<?php
+date_default_timezone_set("Africa/Accra");
+$web = "https://api.telegram.org/bot273311630:AAFcQqlmIX8nJvW0cULCyaL-xgJmcFkC8Dw";
+$update = file_get_contents($web."/getupdates");
+$updateArray= json_decode($update, true);
+print_r($updateArray);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

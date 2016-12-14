@@ -1,212 +1,42 @@
-<?php
-
-include'db_conn.php'; 
-
-include'sendmsg.php'
+<?
+session_start();
+//$user_login1  = $_SESSION['username'];
 ?>
 <?php
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $dbname = "bot";
 
+    // Create connection
+    $conn = mysqli_connect($servername, $username, $password,$dbname);
 
+    // Check connection
+    if (!$conn) {
+        die("Connection failed: " . mysqli_connect_error());
+        
+    } else
+    {
+        //echo "working";
+    }
 ?>
 
-<?php 
-
-//$bottoken ="273311630:AAFcQqlmIX8nJvW0cULCyaL-xgJmcFkC8Dw";
-//$website = "https://api.telegram.org/bot".$bottoken;
-
-
-
-//$text=$updateArray["result"][0]["message"]["text"];
-//print_r($text);
-
-//$text1=$updateArray["result"][1]["message"]["text"];
- //print_r($text1);
-
- require_once'count.php';
-
- //echo $array_count;
- //echo $length;
- //echo $_SESSION["count"];
- //$newlength=$length;
-
- //$newlength1 = count($updateArray["result"]);
- //$newlength = count($updateArray["result"]);
- echo $length;
-
-
-
-
- //echo "<br>".$length;
-$text=$updateArray["result"][$length-1]["message"]["text"];
-// //$text0=$updateArray["result"][$length]["message"]["text"];
-$text=strtolower($text);
- $chat_id=$updateArray["result"][0]["message"]["chat"]["id"];
-
- //$date=$updateArray["result"][0]["message"]["date"];
-
- include'array.php'; 
-
-if ($length>$array_count) {
+<?php
+if (isset($_POST["submit1"])){
     
-            //echo $text;
-        //$bottext="no internet";
-         if($text == 'hi'){
-            //file_get_contents($web."/sendmessage?chat_id=".$chat_id."&text=hello");
-           //$bottext="welcome to VVU FAQ BOT . What do you want to know";
-            sendmsg($text,"welcome to VVU FAQ BOT . What do you want to know",$conn,$web,$chat_id);
-           
-        } 
-        else if($text == 'ciao'){
-            //file_get_contents($web."/sendmessage?chat_id=".$chat_id."&text=bye");
-             //$bottext="bye";
-            sendmsg($text,"bye",$conn,$web,$chat_id);
-        echo "bye";
-        }
-
-        else{
-
+        $email=$_POST["email"];
+        $fn=$_POST["fn"];
+        $ln=$_POST["ln"];
+        $username=$ln.$fn;
 
         
-
-#-------send user msg to the database------------#
-$query_text="INSERT INTO bot_text(msg, source)
-    VALUES('$text', 'user')";
-
-
-    $result_text = mysqli_query($conn, $query_text);
-    if ($result_text){
-       echo "true";
-        //return true;
-    }else {
-        //echo "false";
-        //$error=mysqli_error($conn);
-        echo mysqli_error($conn);
+         $_SESSION["username"]=$username;
+         $_SESSION["email"]=$email;
+         echo $_SESSION["email"];
+         
     }
-
-$query_question="SELECT * FROM `questions` WHERE  `questions`.`questions` LIKE '%$text%'";
-
-
-         $result_question = mysqli_query($conn, $query_question); 
-         if ($result_question) {
-                echo"cool ".'<br>';
-              } else {
-            echo " not cool ";
-                  }
-
-                  $usercount=mysqli_num_rows($result_question);
-                  echo $usercount .'<br>';
-                  if ($usercount==0) {
-
-                    $bottext="Please reformalute your question or provide a key word";
-                  } else {
-                    
-
-                         while ( $row=mysqli_fetch_assoc($result_question)) {
-                
-                         $bottext=$row["answers"];
-                         //echo $bottext;
-
-                         file_get_contents($web."/sendmessage?chat_id=".$chat_id."&text=".$bottext);
-
-                         #-------send bot msg to the database------------#
-                         $bot_source="bot";
-                            $query_bot="INSERT INTO bot_text(msg, source)
-                            VALUES('$bottext', '$bot_source')";
-
-
-                            $result_bot = mysqli_query($conn, $query_bot);
-                            if ($result_bot){
-                               echo "true";
-                                //return true;
-                            }else {
-                                //echo "false";
-                                //$error=mysqli_error($conn);
-                                echo mysqli_error($conn);
-                            }
-
-                                                                                 } 
-
-                            }
-
-
-
-
-// file_get_contents($web."/sendmessage?chat_id=".$chat_id."&text=".$bottext);
-// $bot_source="bot";
-
-
-
-
-
-}
-
-
-#-------update array count------------#
-$array_count=$array_count+1;
-$query_update=" UPDATE  `bot`.`array` SET  `count`='$array_count'  WHERE  `arrayid` ='1'";
-
-
-    $result_update = mysqli_query($conn, $query_update);
-    if ($result_update){
-       echo "updated";
-        //return true;
-    }else {
-        //echo "false";
-        //$error=mysqli_error($conn);
-         echo "not updated";
-        echo mysqli_error($conn);
-    }
-
-
-
-
-
-} else {
-    # code...
-}
-
-
-// //print_r($chat_id);
-// echo "<br>".$chat_id;
-
-// //file_get_contents($website."/sendmessage?chat_id=".$chat_id."&text=test");
-// $text = $updateArray["result"][$length-1]["message"]["text"];
-
-
-
-//$bottext="bot";
-// $query_text ="INSERT INTO bot_text(msg, source)
-//     VALUES('$bottext', '$bot_source')";
-
-
-//     $result_text  = mysqli_query($conn, $query_text );
-//     if ($result_text ){
-//        echo "true";
-//         //return true;
-//     }else {
-//         //echo "false";
-//         //$error=mysqli_error($conn);
-//         echo mysqli_error($conn);
-//     }
-
-
-
     
-
-
-
-// $my_array = array("Dog","Cat","Horse");
-
-// //echo $my_array ;
-// array_push($my_array,$bottext);
-// print_r($my_array);
-// $length1 = count($my_array);
-
-
 ?>
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -218,6 +48,7 @@ $query_update=" UPDATE  `bot`.`array` SET  `count`='$array_count'  WHERE  `array
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="bootstrap.css">
 
     <script>
 // $(document).ready(function(){
@@ -442,19 +273,107 @@ echo $phpvar;?>";}
     </style>
 </head>
 <body>
+<div id="php">
+<script type="text/javascript">
+    var auto_refresh = setInterval(
+           function ()
+           {
+           $('#demo-chat-body').load('');
+           }, 5000);
+    </script>
 
+<script>
+      function auto_load(){
+        $.ajax({
+          url: "api.php",
+          cache: false,
+          success: function(data){
+             $("#php").html(data);
+          } 
+        });
+      }
+ 
+      $(document).ready(function(){
+ 
+        auto_load(); //Call auto_load() function when DOM is Ready
+ 
+      });
+ 
+      //Refresh auto_load() function after 10000 milliseconds
+      setInterval(auto_load,5000);
+   </script>
+
+
+</div>
 <link href="font-awesome.min.css" rel="stylesheet">
 <!-- <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet"> -->
 <nav class="<!--navbar navbar-inverse navbar-fixed-top-->">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#">Telegram Bot</a>
+    <div class="row">
+        <div class=""></div>
+
     </div>
-    
+      <a class="navbar-brand" href="#">Telegram Bot</a>
+        
+    </div>
+    <div class="btn-group pull-right" style="margin-top: 10px;">
+                <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <i class="glyphicon glyphicon-user"></i><span class="hidden-sm hidden-xs"><?php  echo @$_SESSION["email"];   ?></span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><button  style="width:100%;" type="button" class="btn btn-default btn-lg" data-toggle="modal" data-target="#myModal"><h5>Login</h5></button></li>
+                    <li class="divider"></li>
+                    <li><a href="logout.php">Logout</a></li>
+                </ul>
+            </div>
   </div>
 </nav> 
 
-                
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+    
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Provide your credentials</h4>
+        </div>
+        <div class="modal-body" class="col-sm-8-offset">
+          <p><form role="form" action="" method="post">
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" class="form-control" id="email" placeholder="Enter email" name="email">
+    </div>
+    <div class="form-group">
+      <label for="pwd">Full Name</label>
+
+      <div class="row">
+      <div class="col-sm-6">
+           <input type="text" class="form-control" id="fn" name="fn" placeholder="First Name" required>
+      </div>
+      <div class="col-sm-6">
+           <input type="text" class="form-control" id="ln" name="ln" placeholder="Last Name" required>
+      </div>
+     </div>
+
+    </div>
+    
+    <button type="submit" class="btn btn-default"name="submit1">Submit</button>
+  </form></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  
+
+         
+
 <div class="container" style="POSITION: relative;top: 50px;">
     <div class="col-md-offset-6 col-lg-offset-1">
         <div class="panel">
@@ -465,12 +384,7 @@ echo $phpvar;?>";}
     					<button class="btn btn-default" type="button" data-toggle="collapse" data-target="#demo-chat-body"><i class="fa fa-chevron-down"></i></button>
     					<button type="button" class="btn btn-default" data-toggle="dropdown"><i class="fa fa-gear"></i></button>
     					<ul class="dropdown-menu dropdown-menu-right">
-    						<li><a href="#">Available</a></li>
-    						<li><a href="#">Busy</a></li>
-    						<li><a href="#">Away</a></li>
-    						<li class="divider"></li>
-    						<li><a id="demo-connect-chat" href="#" class="disabled-link" data-target="#demo-chat-body">Connect</a></li>
-    						<li><a id="demo-disconnect-chat" href="#" data-target="#demo-chat-body">Disconect</a></li>
+    						
     					</ul>
     				</div>
     			</div>
@@ -618,12 +532,12 @@ echo $phpvar;?>";}
     				<div class="row">
     					<div class="col-xs-9">
     					<form id="form"  name="form" method="post">
-    						<input name="input" id="input" type="text" placeholder="Enter your text" class="form-control chat-input" style="height: auto;">
+    						<input name="input" id="input" type="text" placeholder="Enter your text" class="form-control chat-input" style="height: auto;" required>
     					
                         </div>
                         
     					<div class="col-xs-3">
-    						<button class="btn btn-primary btn-block" type="submit" name="submit" id="submit" onClick="jstophp()">Send</button>
+    						<button class="btn btn-primary btn-block" type="submit" name="submit" id="submit" >Send</button>
     					</div>
     					</form>
     				</div>
